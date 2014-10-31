@@ -1,0 +1,34 @@
+﻿<!------------------------------------------------------------------------
+     -   File name:     index.html
+    -   Author:         Jeremy Whiteside (200249654)
+    -   Website:        Jerpot (http://webdesign4.georgianc.on.ca/~200249654/slotmachine/)
+    -   Description:    This is my personal portfolio that I made for assignment 1 in my advanced web dev class.
+    -                   It is a single-page website, and all navigation is handled through scrolling.
+    -                   I chose a single-page website over a multiple-paged website because I have not
+    -                   made a single-page website before, and wanted to try my hand at it.  I learned some new things
+    -                   and think I pulled it off fairly well.  I started out with a very specific and defined idea of what I wanted
+    -                   my site to look like.  I ran into alot of problems along the way, and ended up making many small changes to my design,
+    -                   until I eventually settled on the current design.  The current design looks similar to my old design, but only if you squint
+    -                   and tilt your head about 30 degrees to the right.
+    ------------------------------------------------------------------------->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JERPOT</title>
+    <!-- CSS Section -->
+    <link href="css/normalize.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+</head>
+<body onload="init()">
+    <div>
+        <canvas id="canvas" width="1054" height="1640"></canvas>
+    </div>
+    <!-- JavaScript Section -->
+    <script src="scripts/jquery-2.1.1.min.js"></script>
+    <script src="scripts/lib/easeljs-0.7.1.min.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>

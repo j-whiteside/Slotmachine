@@ -1,0 +1,5 @@
+Spin: http://dabuttonfactory.com/#t=SPIN&f=Calibri-Bold&ts=24&tc=ffffff&tshs=1&tshc=222222&it=png&c=round&bgt=gradient&bgc=05f515&ebgc=059630&be=on&bs=3&bc=569&hp=25&vp=13
+Spin greyed out: http://dabuttonfactory.com/#t=SPIN&f=Calibri-Bold&ts=24&tc=ffffff&tshs=1&tshc=222222&it=png&c=round&bgt=gradient&bgc=fcfcfc&ebgc=6e6e6e&be=on&bs=3&bc=569&hp=25&vp=13
+Bet amounts: http://dabuttonfactory.com/#t=5000&f=Calibri-Bold&ts=24&tc=ffffff&tshs=1&tshc=222222&it=png&c=5&bgt=gradient&bgc=05f515&ebgc=059630&be=on&bs=3&bc=569&hp=25&vp=5
+Reset: http://dabuttonfactory.com/#t=RESET&f=Calibri-Bold&ts=24&tc=ffffff&tshs=1&tshc=222222&it=png&c=5&bgt=gradient&bgc=f5f108&ebgc=947c06&be=on&bs=3&bc=569&hp=25&vp=5
+Pay out: http://dabuttonfactory.com/#t=PAY%20OUT&f=Calibri-Bold&ts=24&tc=ffffff&tshs=1&tshc=222222&it=png&c=5&bgt=gradient&bgc=f50a29&ebgc=ab0303&be=on&bs=3&bc=569&hp=25&vp=5
