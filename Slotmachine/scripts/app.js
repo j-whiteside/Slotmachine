@@ -1,3 +1,19 @@
+/*------------------------------------------------------------------------
+-   File name:          app.js
+-   Author:             Jeremy Whiteside (200249654)
+-   Last modified by:   Jeremy Whiteside, on October 31, 2014
+-   Website:            Jerpot (http://webdesign4.georgianc.on.ca/~200249654/slotmachine/)
+-   Description:        This is my Slotmachine that I made for assignment 2 in my advanced web dev class.
+-                       This page is where all my js scripts are contained.  I used a mix of javascript, jquery,
+-                       and functionality from the createjs framework.  I losely based my game off the game logic supplied
+-                       by the instructor.  The spin, winnings, and jackpot logic are all I used; the rest was created
+-                       by me.  I called it "Jerpot" as a play on my name (Jeremy, not jack).  I found a slotmachine 
+-                       template on the web, and heavily modified it to fit my design and elements.  I made the buttons
+-                       and the "spin" graphic on my own, but found the reel images (fruits, bells, bars, etc...)
+-                       on the web.
+-------------------------------------------------------------------------*/
+
+//Declaring my module level variables so they can be accessed by all the functions
 var canvas = document.getElementById("canvas");
 var stage;
 var game;
@@ -58,6 +74,9 @@ var turns = 0;
 var finalStanding;
 var winRatio = 0;
 
+//This function runs when the app.js file is initialized.  It creates the main stage to 
+//hold all my elements, and sets up the ticker at 60fps.  It then calls the function to 
+//draw the slotmachine.
 function init() {
     stage = new createjs.Stage(canvas);
     
@@ -70,17 +89,21 @@ function init() {
     
 }
 
+//This function will update the stage at every tick; 60 times per second
 function handleTick() {
 
     stage.update();
 }
 
-
+//This function draws the slotmachine, and positions all my canvas elements.  The background, and all
+//images are created as createjs bitmaps.  All the elements are added to the game canvas, which is then
+//added to the stage once all the elements have been placed.
 function drawSlotMachine() {
     stage.removeAllChildren();
     game = new createjs.Container();
     reelCanvas = new createjs.Container();
 
+    //Slotmachine background
     slotMachineImage = new createjs.Bitmap("images/slotmachine-background.png");
     slotMachineImage.scaleX = 1.5;
     slotMachineImage.scaleY = 1.7;
@@ -108,7 +131,6 @@ function drawSlotMachine() {
     payOutButton.addEventListener("click", payOut);
 
     //Spin Button
-
     spinButton = new createjs.Bitmap("images/buttons/Spin.png");
     spinButton.x = 493;
     spinButton.y = 1023;
@@ -118,7 +140,6 @@ function drawSlotMachine() {
     spinButton.addEventListener("click", spin);
 
     //Disabled Spin Button
-    
     spinButtonGrey = new createjs.Bitmap("images/buttons/Spin-grey.png");
     spinButtonGrey.x = 493;
     spinButtonGrey.y = 1023;
@@ -127,29 +148,35 @@ function drawSlotMachine() {
     game.addChild(spinButtonGrey);
     
 
-    //Creating textboxes
+//Creating textboxes
+    //This textbox will display the current bet
     betTextBox = new createjs.Text(playerBet.toString(), "30px Arial", "red");
     betTextBox.x = 340;
     betTextBox.y = 930;
     game.addChild(betTextBox);
 
+    //This textbox will display the player's balance
     balanceTextBox = new createjs.Text(playerBalance.toString(), "30px Arial", "red");
     balanceTextBox.x = 340;
     balanceTextBox.y = 860;
     game.addChild(balanceTextBox);
 
+    //This textbox will display the current jerpot pool
     jerpotTextBox = new createjs.Text(jerpot.toString(), "30px Arial", "red");
     jerpotTextBox.x = 310;
     jerpotTextBox.y = 254;
     game.addChild(jerpotTextBox);
 
+    //This textbox will display the result of each spin, and how much money was won.
     spinResultTextBox = new createjs.Text(winningsText, "30px Arial", "red");
     spinResultTextBox.x = 235;
     spinResultTextBox.y = 790;
     game.addChild(spinResultTextBox);
 
 
-    //The bet amount buttons
+    //The bet amount buttons.  When they are clicked, they change the player's bet.
+    //If the player does not have enough money, the spin button is greyed out upon
+    //selecting a bet.
 
     //Bet1
     bet1 = new createjs.Bitmap("images/buttons/bet1.png");
@@ -259,6 +286,7 @@ function drawSlotMachine() {
                 validateBet();
             });
 
+    //Initializes the reels to display "spin" on each reel
     drawReels("spin", "spin", "spin");
 
     stage.addChild(game);
@@ -266,18 +294,26 @@ function drawSlotMachine() {
 
 }
 
-/* When the player clicks the spin button the game kicks off */
+//When the player clicks the spin button the game will begin
 function spin() {
 
+    //If the player runs out of money and tries to spin
     if (playerBalance == 0) {
         if (confirm("You ran out of Money! \nDo you want to play again?")) {
+            //This will restart the game
             resetAll();
         }
         else {
+            //This will display the end-game stats, then restart the game
             payOut();
         }
 
     }
+    //If the player has enough money it will call the reels function to determine
+    //what the spin results were.  They are added to an array, then passed to the drawReels
+    //function so that they can be displayed on the screen.  The determineWinnings function is then called
+    //so as to determine the outcome of the spin.  The turn counter is augmented by one, and it calls the 
+    //validateBet function to grey out the spin button if the player's last (now current) bet is not valid.
     else {
         spinResult = Reels();
         reel1 = spinResult[0];
@@ -294,8 +330,8 @@ function spin() {
 };
 
 
-/* When this function is called it determines the spinResult results.
-e.g. Bar - Orange - Banana */
+//When this function is called it determines the results of the spin, and what will
+//subsequently be displayed on the reels.
 function Reels() {
 
 
@@ -336,13 +372,18 @@ function Reels() {
                 break;
         }
     }
-    //alert(spinResult[0] + " " + spinResult[1] + " " + spinResult[2]);
+    
+    //Returning the spinResult array that contains the spin results.
     return spinResult;
 }
 
+//This function will draw the reels.  It recieves the name of the element to be displayed,
+//then searches the images folder for the png with that specified name.  It is then created
+//as a bitmap, positionned, and added to the reelCanvas canvas, which is then added to the game canvas.
 function drawReels(reel1, reel2, reel3) {
 
-
+    //This will clear the results from the previous spin so that the current results are 
+    //properly displayed.
     reelCanvas.removeAllChildren();
 
 
@@ -374,7 +415,8 @@ function drawReels(reel1, reel2, reel3) {
 
 
 
-/* This function calculates the player's winnings, if any */
+//This function calculates the player's winnings, if any.
+//Depending on the results, it calls the winMessage, or lossMessage functions
 function determineWinnings() {
     if (blanks == 0) {
         if (grapes == 3) {
@@ -436,7 +478,9 @@ function determineWinnings() {
 }
 
 
-/* Utility function to show a win message and increase player money */
+//This function will run in the event of a successful spin.  The winnings are added to the player's balance,
+//and a portion of the winnings are replicated and added to the jerpot pool.  The new balance,
+//and the win message are displayed on the screen.  It resets the reel count, and also checks for a jerpot win.
 function showWinMessage() {
     totalWinnings += winnings;
     balanceTextBox.text = playerBalance += winnings;
@@ -446,7 +490,10 @@ function showWinMessage() {
     checkjerpot();
 }
 
-/* Utility function to show a loss message and reduce player money */
+//This function will run in the event of an unsuccessful spin.  The bet is subtracted from the player's balance
+//and a portion of the bet is replicated and added to the jerpot pool.  The new balance,
+//and the loss message are displayed on the screen.  It resets the reel count, but doesn't check for a jerpot win
+//because the player is not a winner, they are a loser.
 function showLossMessage() {
     totalLoss += playerBet;
     balanceTextBox.text = playerBalance -= playerBet;
@@ -457,7 +504,7 @@ function showLossMessage() {
 }
 
 
-/* Utility function to reset all fruit tallies */
+//This function resets the reel count that is used by the determineWinnings function.
 function resetReels() {
     grapes = 0;
     bananas = 0;
@@ -471,7 +518,8 @@ function resetReels() {
 
 }
 
-/* Utility function to reset the player stats */
+//This function resets all the variables used in the game.  It is called when the player decides to pay-out
+//or reset their game.  All variables are replaced, and the slotMachine is reset to it's initial form.
 function resetAll() {
     resetReels();
     playerBalance = startingBalance;
@@ -490,9 +538,11 @@ function resetAll() {
 }
 
 
-/* Check to see if the player won the jerpot */
+//This function checks if the player won the jerpot by matching two randomly generated numbers.
+//If the roll is successful, an alert appears telling the player how much they won, it is also displayed
+//in the spin results text box.  The winnings are added to the player's balance, and the jerpot is reset
+//to $500k instead of the initial $1 million.
 function checkjerpot() {
-    /* compare two random values */
     var jerpotTry = Math.floor(Math.random() * 51 + 1);
     var jerpotWin = Math.floor(Math.random() * 51 + 1);
     if (jerpotTry == jerpotWin) {
@@ -509,7 +559,7 @@ function checkjerpot() {
 
 
 
-/* Utility function to check if a value falls within a range of bounds */
+//This functions makes sure the rolls for the spins are within bounds
 function checkRange(value, lowerBounds, upperBounds) {
     if (value >= lowerBounds && value <= upperBounds) {
         return value;
@@ -519,8 +569,12 @@ function checkRange(value, lowerBounds, upperBounds) {
     }
 }
 
+//This function allows the player to pay out and end their game.  It will display the game's
+//stats to the screen and will let the player restart the game fresh.
 function payOut() {
 
+    //This will place a +, -, or display even for the final standing depending on 
+    //what their balance is in relation to the starting balance ($5000)
     if ((playerBalance - startingBalance) > 1)
     {
         finalStanding = "+$" + (playerBalance - startingBalance);
@@ -546,6 +600,9 @@ function payOut() {
     
 }
 
+//This function is called when the player selects a bet, and at the end of the spin function.
+//It checks if the player has enough money for their specified bet.  If the player does not have enough,
+//the spin button is greyed out.
 function validateBet() {
 
     
@@ -562,4 +619,6 @@ function validateBet() {
     }
 
 }
+
+function powerDown
 
